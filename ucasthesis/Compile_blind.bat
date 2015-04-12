@@ -18,7 +18,7 @@ set CompileName="xelatex"
 for %%F in (*.tex) do (
 set FileName=%%~nF
 )
-set FileName="Thesis"
+set FileName="Thesis_Blind"
 @rem ******************************************
 @rem ** Create Tmp dir for aux and log files  *
 @rem ******************************************

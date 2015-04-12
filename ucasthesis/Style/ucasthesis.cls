@@ -33,9 +33,18 @@
 %%
 %%%%*************************** loadclass infomation *********************************
 %%
+%% cs4size: chinese small 4 size as default font size
 \LoadClass[cs4size,a4paper,fancyhdr,fntef,hyperref,UTF8,adobefonts]{ctexbook}[2011/03/11]
 %%%%% --------------------------------------------------------------------------------
-%%
+%% Layout
+\RequirePackage{geometry}
+\geometry{paper=a4paper,left=2.5cm,right=2.4cm,top=2.5cm,bottom=2.0cm}
+\linespread{1.4}
+%% nottoc: not add table of contents to table of contents
+%% notlot: not add list of table to table of contents
+%% notlof: not add list of figures to table of contents
+\RequirePackage[nottoc,notlof,notlot]{tocbibind}
+
 %%%%***************************** package infomation *********************************
 %%
 %% math packages
@@ -51,16 +60,39 @@
 }
 %%%%% --------------------------------------------------------------------------------
 %%
+%\def\@chapter[#1]#2{%
+%  \ifnum \c@secnumdepth >\m@ne
+%    \if@mainmatter
+%      \refstepcounter{chapter}%
+%      \typeout{\CTEXthechapter}%
+%      \addcontentsline{toc}{chapter}
+%        {\zihao{4}{\CTEXthechapter\hspace{0.3em}}#1}%
+%    \else
+%      \addcontentsline{toc}{chapter}{#1}%
+%    \fi
+%  \else
+%    \addcontentsline{toc}{chapter}{#1}%
+%  \fi
+%  \chaptermark{#1}%
+%  \addtocontents{lof}{\protect\addvspace{10\p@}}%
+%  \addtocontents{lot}{\protect\addvspace{10\p@}}%
+%  \if@twocolumn
+%    \@topnewpage[\@makechapterhead{#2}]%
+%  \else
+%    \@makechapterhead{#2}%
+%  \@afterheading
+%  \fi}
+
 %%%%******************************* page layout **************************************
 %%
-\oddsidemargin 1.5 true cm
-\if@twoside
-  \evensidemargin 0 true cm
-\else
-  \evensidemargin 1.5 true cm
-\fi
-\textheight 21 true cm
-\textwidth 14.5 true cm
+%\oddsidemargin 1.5 true cm
+%\if@twoside
+%  \evensidemargin 0 true cm
+%\else
+%  \evensidemargin 1.5 true cm
+%\fi
+%\textheight 21 true cm
+%\textwidth 14.5 true cm
 \headheight 15pt
 %%%%% --------------------------------------------------------------------------------
 %%
@@ -198,42 +230,80 @@
 }
 %%%%% --------------------------------------------------------------------------------
 %%
+%%%%*********************** make copyright page **************************************
+%%
+\newcommand{\makecopyrightpage}{
+	\cleardoublepage
+  \thispagestyle{empty}
+	\begin{center}
+	{\bf\zihao{3}{\ \UCAS@value@origtitle\ }}
+	\end{center}
+	\vskip 10pt
+	\zihao{-4}{\UCAS@value@origtext}
+	\vskip 100pt
+	\begin{center}
+	{\bf\zihao{3}{\ \UCAS@value@copyrighttitle\ }}
+	\end{center}
+	\vskip 10pt
+	\zihao{-4}{\UCAS@value@copyrighttext}
+  \clearpage
+  \if@twoside
+    \thispagestyle{empty}
+    \cleardoublepage
+  \fi
+}
+%%%%% --------------------------------------------------------------------------------
+%%
 %%%%****************************** new environments **********************************
 %%
 %% define chinese abstract
 \newenvironment{abstract}
-  {\Nchapter{\UCAS@label@abstract}}
-  {}
+{
+	%%\Nchapter{\UCAS@label@abstract}
+	\pagestyle{empty}
+	\begin{center}
+    {\heiti\zihao{3}\UCAS@value@title}
+    \vskip 25pt
+    {\heiti\zihao{-3}\UCAS@label@abstract}
+	\vskip 25pt
+	\end{center}
+	\par
+  }
+  {\cleardoublepage}
 %% define chinese keywords
 \newcommand\keywords[1]{%
-  \vspace{2ex}\noindent{\heiti \UCAS@label@keywords} #1}
+  \vspace{2ex}\noindent{\zihao{4}\heiti \UCAS@label@keywords} #1}
 %% define engish abstract
 \newenvironment{englishabstract}
-{\chapter[\UCAS@label@englishabstract]{
-    \UCAS@value@englishtitle
-     \vskip 5pt
-     {\normalfont\zihao{4} \UCAS@value@englishauthor\\
-     Directed by \UCAS@value@englishadvisortitle\ \UCAS@value@englishadvisor}
-     \vskip 25pt
-     \UCAS@label@englishabstract
-  }}
-  {}
+{
+	%%\Nchapter{\UCAS@label@englishabstract}
+	\pagestyle{empty}
+    \begin{center}
+	{\bfseries\zihao{3}\UCAS@value@englishtitle}
+    \vskip 25pt
+    {\bfseries\zihao{-3}\UCAS@label@englishabstract}
+	\vskip 25pt
+	\end{center}
+	\par
+  }
+  {\cleardoublepage}
 %% define engish keywords
 \newcommand\englishkeywords[1]{%
-  \vspace{2ex}\noindent{\bf \UCAS@label@englishkeywords} #1}
+  \vspace{2ex}\noindent{\zihao{-3}\bf \UCAS@label@englishkeywords} #1}
 %% redefine table of contents
-\renewcommand\tableofcontents{%
-    \if@twocolumn
-      \@restonecoltrue\onecolumn
-    \else
-      \@restonecolfalse
-    \fi
-    \Nchapter{\contentsname}%
-    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
-    \@starttoc{toc}%
-    \if@restonecol\twocolumn\fi
-    }
+%\renewcommand\tableofcontents{%
+%    \if@twocolumn
+%      \@restonecoltrue\onecolumn
+%    \else
+%      \@restonecolfalse
+%    \fi
+%    \Nchapter{\contentsname}%
+%    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
+%    \@starttoc{toc}%
+%    \if@restonecol\twocolumn\fi
+%    }
 \addtocontents{toc}{\let\string\CTEX@spaceChar\relax}
+
 %% define a macro for add chapter without an number to toc and bookmark.
 \newcommand\intotoc[1]{%
   %\markboth{\MakeUppercase{#1}}{}%set the leftmark with upcase
@@ -318,8 +388,13 @@
      {\def\@noitemerr
        {\@latex@warning{Empty `thebibliography' environment}}%
       \endlist}
+
+\newenvironment{resumepub}[1]
+  {\Nchapter{\UCAS@label@resumeandpub}}
+  {}
+
 \newenvironment{publications}[1]
-     {\Nchapter{\UCAS@label@publications}%
+     {%%{\UCAS@label@publications}%
       \@mkboth{\MakeUppercase\UCAS@label@publications}
               {\MakeUppercase\UCAS@label@publications}%
       \list{\@biblabel{\@arabic\c@enumiv}}%
@@ -339,7 +414,8 @@
        {\@latex@warning{Empty `publications' environment}}%
       \endlist}
 \newenvironment{resume}
-  {\Nchapter{\UCAS@label@resume}}
+  {%%{\UCAS@label@resume}
+  }
   {}
 \newenvironment{resumesection}[1]
   {{\noindent\normalfont\bfseries #1}
@@ -389,10 +465,14 @@
   %\renewcommand{\sectionmark}[1]{\markright{\MakeUppercase{\thesection.\ #1}}}
   \fancyhf{}% clear all header and footer fields
   %% header configure:
-  \fancyhead[CE]{\small \UCAS@value@titlemark}% title name in header, \@title is the default value
-  \fancyhead[CO]{\small \leftmark}% chapter name in header
+%  \fancyhead[CE]{\small \UCAS@value@titlemark}% title name in header, \@title is the default value
+%  \fancyhead[CO]{\small \leftmark}% chapter name in header
+  \fancyhead[RE]{\small \UCAS@value@titlemark}% title name in header, \@title is the default value
+  \fancyhead[LO]{\small \leftmark}% chapter name in header
+  \fancyhead[LE]{\small \thepage}% title name in header, \@title is the default value
+  \fancyhead[RO]{\small \thepage}% chapter name in header
   %% footer configure:
-  \fancyfoot[CE,CO]{\small \thepage}% page number in footer at center
+%  \fancyfoot[CE,CO]{\small \thepage}% page number in footer at center
   %% the thickness of the decorative lines on both the header and the footer
   %\renewcommand{\headrulewidth}{0.5pt}
   %\renewcommand{\footrulewidth}{0pt}
@@ -403,7 +483,9 @@
 \fancypagestyle{plain}{%
   \fancyhf{}% remove everything
   %% header configure:
-  \fancyhead[C]{\small \leftmark}% chapter name at left of odd page header
+  %\fancyhead[C]{\small \leftmark}% chapter name at left of odd page header
+  \fancyhead[L]{\small \leftmark}% chapter name at left of odd page header
+  \fancyhead[R]{\small \thepage}% chapter name at left of odd page header
   %% the thickness of the decorative lines on both the header and the footer
   %\renewcommand{\headrulewidth}{0.5pt}% remove lines as well
   %\renewcommand{\footrulewidth}{0pt}% remove lines as well
